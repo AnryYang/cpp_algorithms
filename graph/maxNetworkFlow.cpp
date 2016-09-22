@@ -66,7 +66,6 @@ int Augment(int n){ //augment along this path
 
     v = n-1;
     while(Pre[v]>=0){ //update residual graph
-      cout<<v<<",";
       Edge[Pre[v]][v]-=iBottleNeck; // reduce capacity
       Edge[v][Pre[v]]+=iBottleNeck; // add flow
       v = Pre[v];
