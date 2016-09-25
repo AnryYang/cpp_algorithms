@@ -15,9 +15,9 @@ using namespace std;
 #define MAX_NODE_COUNT 100
 int Edge[MAX_NODE_COUNT][MAX_NODE_COUNT]; //edgs, Edge[i][j] denotes capacity
 int ResiEdge[MAX_NODE_COUNT][MAX_NODE_COUNT];
-int Visited[MAX_NODE_COUNT]; //visited nodes 
-int Pre[MAX_NODE_COUNT];  //save an found augment path
-int Layers[MAX_NODE_COUNT]; //save the layer number of nodes
+int Visited[MAX_NODE_COUNT]={0}; //visited nodes 
+int Pre[MAX_NODE_COUNT]={0};  //save an found augment path
+int Layers[MAX_NODE_COUNT]={0}; //save the layer number of nodes
 
 bool DFS(int n){
   // empty the previous augmenting path and visited list

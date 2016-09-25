@@ -12,7 +12,7 @@ using namespace std;
 
 #define MAX_NODE_COUNT 100
 int Graph[MAX_NODE_COUNT][MAX_NODE_COUNT];
-int Visited[MAX_NODE_COUNT];
+int Visited[MAX_NODE_COUNT]={0};
 
 void DepthFirstTraversal(int n){
     

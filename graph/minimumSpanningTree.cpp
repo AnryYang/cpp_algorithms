@@ -28,7 +28,7 @@ struct EdgeToMST{
 void Prim(int n){
     int iMSTSize=0;
     int iMSTWeight=0;
-    int MSTVertices[MAX_NODE_COUNT];
+    int MSTVertices[MAX_NODE_COUNT]={0};
 
     priority_queue<EdgeToMST> qMinEdge;
     
