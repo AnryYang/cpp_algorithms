@@ -220,7 +220,9 @@ int Dinic(int n, int m){
 int main(){
   int n,m;
 
+  cout<<"Please input vertex count and edge count (seperate them by one space):"<<endl;
   cin>>n>>m; // input vertices count, edge count
+  cout<<"Please input edges, each edge one line in the form 'start-vertex end-vertex':"<<endl;
   for(int i=0;i<m;i++){
     int src,tgt,cap;
     cin>>src>>tgt>>cap; //input an edge, src is from-node, tgt is to-node, cap is capacity
