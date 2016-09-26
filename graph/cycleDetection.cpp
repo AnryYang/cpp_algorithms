@@ -21,6 +21,7 @@ int Parent[MAX_NODE_COUNT];
 // whose another vertex is visited before
 bool DetectCycleByDFS_UndirectedGraph(int n){
 
+    bool VisitedEdge[MAX_NODE_COUNT][MAX_NODE_COUNT];
     for(int i=0;i<n;i++) Visited[i]=false;
 
     stack<int> s;
@@ -33,18 +34,21 @@ bool DetectCycleByDFS_UndirectedGraph(int n){
         bool bHasNeighbor = false;
         for(int v=0;v<n;v++){
             
-            // if the neighbor is visited before, there must be a cycle
-            if(UndirectedGraph[u][v]>0 && Visited[v]==true) return true;
+            // if the neighbor is visited before, and the edge is not visited, there must be a cycle
+            if(UndirectedGraph[u][v]>0 && Visited[v]==true && VisitedEdge[u][v]!=true) return true; 
             
             if(UndirectedGraph[u][v]>0 && Visited[v]==false){
                 bHasNeighbor = true;
                 s.push(v);
                 Visited[v] = true;
+                VisitedEdge[u][v]=true;
+                VisitedEdge[v][u]=true;
             }
         }
 
         if(bHasNeighbor == false) s.pop();
     }
+
     return false;
 }
 
@@ -84,8 +88,8 @@ bool DetectCycleByUnionFind_UnDirectedGraph(int n){
                 if(Find(i) == Find(j)){
                     return true;
                 }
+                Union(i, j);
             }
-            Union(i, j);
         }
     }
 
@@ -96,45 +100,53 @@ bool DetectCycleByUnionFind_UnDirectedGraph(int n){
 // in order to detect cycle, we need to detect back-edge
 bool DetectCycleByDFS_DirectedGraph(int n){
     
-    bool Checked[MAX_NODE_COUNT];
+    int Pre[MAX_NODE_COUNT];
+    int Post[MAX_NODE_COUNT];
+    int iClock=0;
 
     for(int i=0;i<n;i++){ 
         Visited[i]=false;
-        Checked[i]=false;
+        Pre[i]=0;
+        Post[i]=0;
     }
 
     stack<int> s;
     s.push(0);
     Visited[0] = true;
+    Pre[0] = ++iClock;
 
     while(!s.empty()){
         int u = s.top();
 
         bool bHasNeighbor = false;
-        for(int v=0;v<n;v++){
-            
-            // if the u's child v has been visited but and checked
-            // edge u->v is a back-edge
-            // that means v must be the ancestor of u
-            // there is a cycle here
-            if(DirectedGraph[u][v]>0 && Visited[v]==true){
-                if(Checked[v]==true) return false; 
-            }
-            
-            if(DirectedGraph[u][v]>0 && Visited[v]==false){
-                bHasNeighbor = true;
-                s.push(v);
-                Visited[v] = true;
-            }
-        }
 
-        //after visiting u's children, mark u as checked
-        Checked[u]=true;
+            for(int v=0;v<n;v++){
+                if(DirectedGraph[u][v]>0){
+                    // if the u's child v has been visited but and checked
+                    // edge u->v is a back-edge
+                    // that means v must be the ancestor of u
+                    // there is a cycle here
+                    if(Visited[v]==true){
+                        if(Post[v]>Post[u]&&Post[u]>Pre[u]&&Pre[u]>Pre[v]) return true;
+                    }
+            
+                    if(Visited[v]==false){
+                        bHasNeighbor = true;
+                        s.push(v);
+                        Visited[v] = true;
+                        Pre[v] = ++iClock;
+                    }
+                }
+            }
 
+
+        //if no children found or every child has been visited, pop it
         if(bHasNeighbor == false){
             s.pop();
+            Post[u] = ++iClock;
         }
     }
+
     return false;
 }
 
