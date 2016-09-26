@@ -7,12 +7,15 @@
 
 #include<iostream>
 #include<queue>
+#include<vector>
+#include<algorithm>
 
 using namespace std;
 
 #define MAX_NODE_COUNT 100
 int Graph[MAX_NODE_COUNT][MAX_NODE_COUNT];
 int MST[MAX_NODE_COUNT][MAX_NODE_COUNT]; //minimum spanning tree nodes
+int Parent[MAX_NODE_COUNT];
 
 struct EdgeToMST{
     int vertex;
@@ -25,7 +28,22 @@ struct EdgeToMST{
     }
 };
 
+struct Edge{
+    int start;
+    int end;
+    int weight;
+
+    Edge(int s, int e, int w):start(s), end(e), weight(w){}
+
+    bool operator <(const Edge &edge) const{
+        return weight<edge.weight;
+    }
+};
+
 void Prim(int n){
+
+    cout<<"Prim:"<<endl;
+
     int iMSTSize=0;
     int iMSTWeight=0;
     int MSTVertices[MAX_NODE_COUNT]={0};
@@ -63,6 +81,67 @@ void Prim(int n){
     cout<<"total MST weight:"<<iMSTWeight<<endl;
 }
 
+int Find(int vertex){
+    while(Parent[vertex]!=vertex){
+        vertex = Parent[vertex];
+    }
+
+    int root = Parent[vertex];
+    return root;
+}
+
+void Union(int v_1, int v_2){
+
+    int root_v_1 = Find(v_1);
+    int root_v_2 = Find(v_2);
+
+    int new_root = min(root_v_1, root_v_2);
+
+    Parent[root_v_1] = new_root;
+    Parent[root_v_2] = new_root;
+}
+
+
+// use union-find
+void Kruskal(int n, int m){
+    
+    cout<<"Kruskal:"<<endl;
+
+    int iMSTWeight = 0;
+    vector<Edge> edges;
+
+    vector<Edge> MSTEdges;
+
+    // get edges from Graph
+    for(int i=0;i<n;i++){
+        Parent[i] = i;
+        for(int j=0;j<i;j++){
+            if(Graph[i][j]>0||Graph[j][i]>0){
+                edges.push_back(Edge(i, j, Graph[i][j]));    
+            }
+        }
+    }
+
+    // sort all edges in asecending order
+    sort(edges.begin(), edges.end());
+
+    // choose edge in ascending order, for each edge,
+    // check if there exits a cycle when adding this edge into to MST 
+    // if so, abandon this edge and choose other one
+    // if not, add it into MST and merge them into one set
+    for(int i=0;i<m;i++){
+        if(Find(edges[i].start)!=Find(edges[i].end)){
+            iMSTWeight += edges[i].weight;
+            MSTEdges.push_back(edges[i]);
+            Union(edges[i].start, edges[i].end);
+        }
+
+        if(MSTEdges.size()==n-1) break; // already selected n-1 edges, it's a MST
+    }
+
+    cout<<"total MST weight:"<<iMSTWeight<<endl;
+}
+
 int main(){
    int n, m;
    
@@ -77,4 +156,5 @@ int main(){
    }
 
    Prim(n);
+   Kruskal(n, m);
 }
