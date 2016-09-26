@@ -14,6 +14,7 @@ using namespace std;
 int UndirectedGraph[MAX_NODE_COUNT][MAX_NODE_COUNT];
 int DirectedGraph[MAX_NODE_COUNT][MAX_NODE_COUNT];
 bool Visited[MAX_NODE_COUNT];
+bool Checked[MAX_NODE_COUNT];
 int Parent[MAX_NODE_COUNT];
 
 // use dfs to detect cycle on undirected graph
@@ -96,55 +97,45 @@ bool DetectCycleByUnionFind_UnDirectedGraph(int n){
     return false; 
 }
 
+bool CheckBackEdgeByDFS(int n, int u){
+
+    Visited[u] = true;
+    Checked[u] = true; //mark that u is in stack, namely, u is already on the path
+
+    //check every children of u
+    for(int v=0;v<n;v++){
+        if(DirectedGraph[u][v]>0){ //for edge u->v
+            if(Visited[v]==false){ //if v is not visited before
+                if(CheckBackEdgeByDFS(n, v)==true){ //start to check all the paths from v (u is on the path already)
+                    return true;
+                } 
+            }
+            else{ 
+                // if v is visited, and v is on the path
+                // that means there is a path v->u (u is the most new one added on the path)
+                // so edge u->v is a back edge
+                if(Checked[v]==true) return true;
+            }
+        }
+    }
+
+    Checked[u] = false; // we have checked the all paths from u, so start to check other paths from u's previous node
+
+    return false;
+}
+
 // use dfs to detect cycles on directed graph
-// in order to detect cycle, we need to detect back-edge
 bool DetectCycleByDFS_DirectedGraph(int n){
-    
-    int Pre[MAX_NODE_COUNT];
-    int Post[MAX_NODE_COUNT];
-    int iClock=0;
 
     for(int i=0;i<n;i++){ 
         Visited[i]=false;
-        Pre[i]=0;
-        Post[i]=0;
+        Checked[i]=false;
     }
 
-    stack<int> s;
-    s.push(0);
-    Visited[0] = true;
-    Pre[0] = ++iClock;
-
-    while(!s.empty()){
-        int u = s.top();
-
-        bool bHasNeighbor = false;
-
-            for(int v=0;v<n;v++){
-                if(DirectedGraph[u][v]>0){
-                    // if the u's child v has been visited but and checked
-                    // edge u->v is a back-edge
-                    // that means v must be the ancestor of u
-                    // there is a cycle here
-                    if(Visited[v]==true){
-                        if(Post[v]>Post[u]&&Post[u]>Pre[u]&&Pre[u]>Pre[v]) return true;
-                    }
-            
-                    if(Visited[v]==false){
-                        bHasNeighbor = true;
-                        s.push(v);
-                        Visited[v] = true;
-                        Pre[v] = ++iClock;
-                    }
-                }
-            }
-
-
-        //if no children found or every child has been visited, pop it
-        if(bHasNeighbor == false){
-            s.pop();
-            Post[u] = ++iClock;
-        }
+    //start to DFS from each vertex, namely, start to check back-edges on all paths from u
+    //once found an back edge, there is a cycle
+    for(int u=0;u<n;u++){
+        if(CheckBackEdgeByDFS(n, u)==true) return true;
     }
 
     return false;
