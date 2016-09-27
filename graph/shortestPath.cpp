@@ -11,7 +11,7 @@
 using namespace std;
 
 #define MAX_NODE_COUNT 100
-#define INFINITE 1<<30
+#define INFINITE 1<<29
 int Graph[MAX_NODE_COUNT][MAX_NODE_COUNT];
 
 struct NodeToSource{
@@ -95,6 +95,44 @@ void BellmanFord(int n){
     }
 }
 
+//all-pair shortest path
+void FloydWarshall(int n){
+
+    cout<<"Floyd Warshall:"<<endl;
+
+    int Distance[MAX_NODE_COUNT][MAX_NODE_COUNT];
+
+    for(int i=0;i<n;i++){
+        for(int j=0;j<i;j++){
+            if(Graph[i][j]>0) Distance[i][j] = Graph[i][j];
+            else Distance[i][j]=INFINITE;
+
+            if(Graph[j][i]>0) Distance[j][i] = Graph[j][i];
+            else Distance[j][i]=INFINITE;
+        }
+    }
+
+    for(int k=0;k<n;k++){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                Distance[i][j] = min(Distance[i][j], Distance[i][k]+Distance[k][j]);
+            }
+        }
+    }
+
+    // print out all distances
+    for(int i=0;i<n;i++){
+        for(int j=0;j<i;j++){
+
+            if(Distance[i][j]>=INFINITE) Distance[i][j]=-1;
+            if(Distance[j][i]>=INFINITE) Distance[j][i]=-1;
+
+            cout<<"shortest distance from "<<i<<" to "<<j<<" is "<<Distance[i][j]<<endl;
+            cout<<"shortest distance from "<<j<<" to "<<i<<" is "<<Distance[j][i]<<endl;
+        }
+    }
+}
+
 int main(){
    int n, m;
    
@@ -110,4 +148,6 @@ int main(){
    Dijkstra(n);
 
    BellmanFord(n);
+
+   FloydWarshall(n);
 }
