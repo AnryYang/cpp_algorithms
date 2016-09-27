@@ -27,8 +27,9 @@ struct NodeToSource{
 
 void Dijkstra(int n){
 
-    vector<NodeToSource> V;   //use vector to store all unselected nodes
+    cout<<"Dijkstra:"<<endl;
 
+    vector<NodeToSource> V;   //use vector to store all unselected nodes
 
     //inialize the distances of all other nodes to source node
     for(int i=1;i<n;i++){
@@ -67,6 +68,33 @@ void Dijkstra(int n){
     }
 }
 
+// dynamic programming
+void BellmanFord(int n){
+
+    cout<<"Bellman Ford:"<<endl;
+
+    int Distance[MAX_NODE_COUNT]={0};
+
+    for(int i=0;i<n;i++){
+        if(Graph[0][i]>0) Distance[i] = Graph[0][i];
+        else Distance[i] = INFINITE; 
+    }
+    
+    for(int k=1;k<n;k++){
+        for(int u=1;u<n;u++){
+            for(int v=1;v<n;v++){
+                if(Graph[v][u]>0){
+                    Distance[u] = min(Distance[u], Distance[v]+Graph[v][u]);
+                }
+            }
+        }
+    }
+
+    for(int i=1;i<n;i++){
+        cout<<"shortest distance to "<<i<<" is "<<Distance[i]<<endl;
+    }
+}
+
 int main(){
    int n, m;
    
@@ -80,4 +108,6 @@ int main(){
    }
    
    Dijkstra(n);
+
+   BellmanFord(n);
 }
