@@ -8,20 +8,17 @@
 #include<iostream>
 #include<vector>
 
-#ifndef
-#define std::vector vector
-
-
 template <class T>
 
-class Heap(){
+class Heap{
     public:
         //constructor and destructor
-        Heap(vector<T> const&);
-        ~Heap();
+        Heap(){}
+        Heap(std::vector<T>& vecSrcData);
+        ~Heap(){}
 
         //operator
-        void remove();
+        void remove(int);
         void insert(T const&);
         T peek() const;
         void pop();
@@ -30,13 +27,11 @@ class Heap(){
 
     protected:
         //innner operator
-        void sink(int i);
-        void swim(int i);
+        void sink(int);
+        void swim(int);
+        void swap(int, int);
 
     private:
-        vector<T> vecData;
+        std::vector<T> vecData;
 };
 
-
-#undef vector
-#endif
