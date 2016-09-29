@@ -15,8 +15,10 @@ Heap<T>::Heap(std::vector<T>& vecSrcData): vecData(vecSrcData){
 
 template <class T>
 void Heap<T>::sink(int i){
-    while(2*i+2 <= size()-1){
-        int j = (vecData[2*i+1] > vecData[2*i+2])?2*i+1:2*i+2;
+    while(2*i+1 <= size()-1){
+        int j = 2*i+1;
+        if(2*i+2<=size()-1) j = (vecData[2*i+1] > vecData[2*i+2])?2*i+1:2*i+2;
+        
         if(vecData[i]<vecData[j]){
             swap(i, j);
             i = j;
