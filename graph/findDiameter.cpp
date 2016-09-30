@@ -91,6 +91,7 @@ int main(){
     }
 
     int s,t;
+    cout<<"Please input edge:start-vertex end-vertex"<<endl;
     for(int i=0;i<n-1;i++){
         cin>>s>>t;
         Tree[s].push_back(t);
