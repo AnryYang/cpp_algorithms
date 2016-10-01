@@ -13,6 +13,8 @@ using namespace std;
 int Graph[MAX_NODE_COUNT][MAX_NODE_COUNT];
 int Visited[MAX_NODE_COUNT]={0};
 int InDegree[MAX_NODE_COUNT]={0};
+int Post[MAX_NODE_COUNT]={0};
+int iPostCounter=0;
 
 void TopSortByInDegree(int n){
 
@@ -41,8 +43,14 @@ void TopSortByInDegree(int n){
     }
 }
 
-void TopSortByPostOrder(int n){
-    
+void TopSortByPostOrder(int n, int start){
+    Visited[start] = 1;
+    for(int v=0;v<n;v++){
+        if(Graph[start][v]>0 && Visited[v]!=1){
+            TopSortByPostOrder(n, v);
+        }
+    }
+    Post[--iPostCounter] = start;
 }
 
 int main(){
@@ -60,6 +68,11 @@ int main(){
     }
 
     TopSortByInDegree(n);
+
+    iPostCounter=n;
+    TopSortByPostOrder(n, 0);
+    for(int i=0;i<n;i++) cout<<Post[i]<<"->";
+    cout<<endl;
 
     return 0;
 }
