@@ -15,7 +15,7 @@ using namespace std;
  * where all numbers are less than n^2
  * given a positive integer B, such that B<=n^3
  * problem is to determine if there is a sequence c_1 ~ c_n, such that
- * sum(c_i)=B where i=1,2,...,n and c_i=a_i or b_i
+ * sum(c_i)=B where i=1,2,...,n and c_i=a_i or b_i in polynomial time
  *
  * solution: http://www.csc.kth.se/utbildning/kth/kurser/DD2354/algokomp10/Ovningar/Exercise3+4_Sol.pdf
 */
