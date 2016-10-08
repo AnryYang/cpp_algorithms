@@ -9,6 +9,17 @@
 #include<vector>
 using namespace std;
 
+/*
+1. 从初始状态到当前状态的代价已经不小于目前找到的最优解，则剪枝
+2. 预测一下从当前状态到解的状态至少要花的代价W(可以很粗略很乐观
+，小于真实的最小代价)，如果W加上到达当前状态时已经花费的代价，必
+然不小于目前找到的最优解,则剪枝
+3. 如果到达某个状态A时，发现前面曾经也到达过A，且前面那次到达A所
+花代价更少，则剪枝。这要求记录到目前为止到达状态A时所能取得的最
+小代价。
+*/
+
+
 /* Roads Problem: POJ1724
  * how to prune? 
  * 1. if finding a path with length being L, during the following search, ignore the path which is greater than L
